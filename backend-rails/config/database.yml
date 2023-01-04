@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  host: localhost
+  encoding: unicode
+  username: root
+  password: root
+  port: '5432'
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  timeout: 5000
+
+development:
+  <<: *default
+  database: wispro_dev
+
+test:
+  <<: *default
+  database: wispro_test
+
+production:
+  <<: *default
+  database: wispro_prod
