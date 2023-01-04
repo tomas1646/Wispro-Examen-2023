@@ -1,10 +1,10 @@
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ButtonPanel from '../components/ButtonPanel';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import FormTextField from '../components/TextField';
 import { Title } from '../components/Title';
+import ToggleField from '../components/ToggleField';
 import { register } from './userService';
 
 export default function Register() {
@@ -36,6 +36,8 @@ export default function Register() {
     setName('');
     setPassword('');
     setUsername('');
+    setEmail('');
+    setType('');
   };
 
   return (
@@ -71,16 +73,12 @@ export default function Register() {
           setValue={setPassword}
           password
         />
-        <ToggleButtonGroup
-          color='primary'
+        <ToggleField
+          title='Select Account Type'
           value={type}
-          exclusive
-          onChange={(e, data) => setType(data)}
-          aria-label='Platform'
-        >
-          <ToggleButton value='Client'>Client</ToggleButton>
-          <ToggleButton value='Isp'>ISP</ToggleButton>
-        </ToggleButtonGroup>
+          setValue={setType}
+        />
+
         <ButtonPanel
           button={[
             { onClick: resetFields, text: 'Clear Fields' },

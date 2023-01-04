@@ -1,6 +1,6 @@
-import { TextField } from "@mui/material";
-import { CSSProperties } from "react";
-import { SubTitle } from "./Title";
+import { TextField } from '@mui/material';
+import { CSSProperties } from 'react';
+import { SubTitle } from './Title';
 
 interface Props {
   label: string;
@@ -20,12 +20,12 @@ function FormTextField(props: Props) {
       <TextField
         name={props.name}
         label={props.label}
-        autoComplete="off"
+        autoComplete='off'
         value={props.value}
         fullWidth
         onChange={(e) => props.setValue(e.target.value)}
         style={props.customStyle}
-        type={props.password ? "password" : "text"}
+        type={props.password ? 'password' : 'text'}
       />
     </>
   );
@@ -50,12 +50,12 @@ export function FormNumberField(props: NumberFieldProps) {
       <TextField
         name={props.name}
         label={props.label}
-        autoComplete="off"
+        autoComplete='off'
         value={props.value}
         fullWidth
         onChange={(e) => props.setValue(e.target.value)}
         style={props.customStyle}
-        type={"number"}
+        type={'number'}
       />
     </>
   );

@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
-import React from "react";
+import { Button } from '@mui/material';
+import React from 'react';
 
 interface ButtonProps {
   onClick?: (e?: any) => void;
@@ -16,10 +16,10 @@ export default function ButtonPanel(props: Props) {
   return (
     <div
       style={{
-        display: "flex",
-        marginTop: "10px",
-        justifyContent: "flex-end",
-        gap: "7px",
+        display: 'flex',
+        marginTop: '10px',
+        justifyContent: 'flex-end',
+        gap: '7px',
       }}
     >
       {props.button.map((button, index) => (
@@ -28,6 +28,7 @@ export default function ButtonPanel(props: Props) {
           onClick={button.onClick}
           text={button.text}
           style={button.style}
+          submit={button.submit}
         />
       ))}
     </div>
@@ -37,8 +38,8 @@ export default function ButtonPanel(props: Props) {
 export function DefaultButton(props: ButtonProps) {
   return (
     <Button
-      type={props.submit ? "submit" : "button"}
-      variant="contained"
+      type={props.submit ? 'submit' : 'button'}
+      variant='contained'
       onClick={props.onClick}
       style={props.style}
     >

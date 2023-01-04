@@ -7,6 +7,7 @@ const userUrl = backEndUrl + '/users';
 
 export interface User {
   token: string;
+  type: string;
   name: string;
   user_name: string;
   avatar_url: string;

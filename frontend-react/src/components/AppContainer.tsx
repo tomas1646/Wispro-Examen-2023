@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Chip,
   Container,
   Divider,
   Drawer,
@@ -12,10 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link, useNavigate } from 'react-router-dom';
 import { SideBarMenu } from '../utils/utils';
 import { cleanupSessionUser, useSessionUser } from '../store/userStore';
 import { Box } from '@mui/system';
+import { SubTitle } from './Title';
 
 interface Props {
   title: string;
@@ -38,7 +41,19 @@ export default function AppContainer(props: Props) {
           <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
             {props.title}
           </Typography>
-          {user && <Typography>{user.name}</Typography>}
+          {user && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '10px',
+                alignItems: 'center',
+              }}
+            >
+              <AccountCircleIcon fontSize='large' />
+              <SubTitle text={user.name} />
+              <Chip label={user.type} color='secondary' />
+            </div>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer
