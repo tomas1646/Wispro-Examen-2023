@@ -1,0 +1,2 @@
+module InternetPlansHelper
+end

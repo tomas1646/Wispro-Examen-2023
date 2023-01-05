@@ -75,8 +75,9 @@ export default function AppContainer(props: Props) {
             props.navigation.map((item) => {
               if (
                 item.showAlways ||
-                (user && item.loggedUserOnly) ||
-                (!user && !item.loggedUserOnly)
+                (item.roles &&
+                  item.roles.some((role) => role === user?.type)) ||
+                (!user && !item.roles)
               ) {
                 return (
                   <ListItem disablePadding key={item.name}>

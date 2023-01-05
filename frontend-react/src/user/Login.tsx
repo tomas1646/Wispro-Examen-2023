@@ -21,7 +21,7 @@ export default function Login() {
     login(username, password)
       .then((response) => {
         showSuccessMessage(response.message);
-        navigate('/');
+        navigate('/internet_plans');
       })
       .catch((err) =>
         showErrorMessage(err.response.data.message || 'Unexcpected Error')
