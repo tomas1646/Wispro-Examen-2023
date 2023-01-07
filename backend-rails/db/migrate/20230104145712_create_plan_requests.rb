@@ -4,7 +4,6 @@ class CreatePlanRequests < ActiveRecord::Migration[7.0]
       t.integer :status, default: 0
 
       t.belongs_to :user
-      t.belongs_to :internet_plan
 
       t.timestamps
     end

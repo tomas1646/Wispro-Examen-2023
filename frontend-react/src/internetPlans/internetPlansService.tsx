@@ -8,7 +8,7 @@ export interface InternetPlans {
   id: number;
   description: string;
   price: number;
-  user_id: number;
+  user: string;
 }
 
 export async function GetPlansGroupedByIsp(): Promise<
@@ -23,6 +23,15 @@ export async function GetPlansGroupedByIsp(): Promise<
 export async function GetIspPlans(): Promise<ApiResponse<InternetPlans[]>> {
   const response: ApiResponse<InternetPlans[]> = (
     await axios.get(internetPlansUrl + '/isp_plans')
+  ).data;
+  return response;
+}
+
+export async function getIspPlansOffered(
+  isp: string
+): Promise<ApiResponse<InternetPlans[]>> {
+  const response: ApiResponse<InternetPlans[]> = (
+    await axios.get(internetPlansUrl + '/isp_plans_offered?isp=' + isp)
   ).data;
   return response;
 }

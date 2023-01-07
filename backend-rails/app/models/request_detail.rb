@@ -1,6 +1,15 @@
 class RequestDetail < ApplicationRecord
-  has_one :plan_request
-  has_one :internet_plan
+  belongs_to :plan_request
+  belongs_to :internet_plan
 
-  enums status: { pending: 0, approved: 1, rejected: 2, finished: 3 }
+  enum status: { pending: 0, approved: 1, rejected: 2, finished: 3 }
+
+  def json
+    {
+      id:,
+      status:,
+      internet_plan: internet_plan.json,
+      created_at:
+    }
+  end
 end

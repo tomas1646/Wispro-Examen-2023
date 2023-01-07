@@ -1,0 +1,130 @@
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Grid,
+} from '@mui/material';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
+import { createPlanRequest } from '../planRequests/planRequestService';
+import { useSessionUser } from '../store/userStore';
+import { GetPlansGroupedByIsp, InternetPlans } from './internetPlansService';
+
+export default function InternetPlansList() {
+  const user = useSessionUser();
+  const navigate = useNavigate();
+  const isClient = user?.type === 'Client';
+  const [internetPlans, setInternetPlans] = React.useState<
+    Map<String, InternetPlans[]>
+  >(new Map<string, InternetPlans[]>());
+  const [selectedPlan, setSelectedPlan] = React.useState<InternetPlans>();
+
+  useEffect(() => {
+    GetPlansGroupedByIsp()
+      .then((response) => {
+        const map = new Map<string, InternetPlans[]>(
+          Object.entries(response.content)
+        );
+        setInternetPlans(map);
+      })
+      .catch((err) => {
+        showErrorMessage(err.response.data.message || 'Unexcpected Error');
+      });
+  }, []);
+
+  const handleClose = () => {
+    setSelectedPlan(undefined);
+  };
+
+  const handleSubmit = () => {
+    if (!selectedPlan) return;
+
+    createPlanRequest(selectedPlan.id)
+      .then((response) => {
+        showSuccessMessage(response.message);
+        navigate('/my_requests');
+      })
+      .catch((err) => {
+        showErrorMessage(err.response.data.message || 'Unexcpected Error');
+      });
+  };
+
+  return (
+    <div>
+      {internetPlans &&
+        Array.from(internetPlans.keys()).map((key) => (
+          <>
+            <h2>{key} internet plans:</h2>
+
+            <Grid container spacing={2}>
+              {internetPlans.get(key)?.map((plan) => (
+                <Grid item xs={4}>
+                  <PlanCard
+                    plan={plan}
+                    isp={key}
+                    isClient={isClient}
+                    setPlan={setSelectedPlan}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        ))}
+      <Dialog open={!!selectedPlan} onClose={handleClose}>
+        <DialogTitle>
+          {'Confirm request to subscribe to plan ' +
+            selectedPlan?.description +
+            ':'}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={handleClose} color='error'>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+interface PlanCardProps {
+  plan: InternetPlans;
+  isp: String;
+  isClient: boolean;
+  setPlan: (plan: InternetPlans) => void;
+}
+
+export function PlanCard(props: PlanCardProps) {
+  return (
+    <Card elevation={6}>
+      <CardContent>
+        <h3>{props.plan.description}</h3>
+        <p>
+          Price per month: <b>${props.plan.price}</b>
+        </p>
+        <p>
+          Isp: <b>{props.isp}</b>
+        </p>
+      </CardContent>
+      {props.isClient && (
+        <CardActions>
+          <Button
+            size='small'
+            variant='outlined'
+            onClick={() => props.setPlan(props.plan)}
+          >
+            Request Plan
+          </Button>
+        </CardActions>
+      )}
+    </Card>
+  );
+}

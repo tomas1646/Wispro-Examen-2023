@@ -2,6 +2,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import SpeedIcon from '@mui/icons-material/Speed';
+import RequestPageIcon from '@mui/icons-material/RequestPage';
+import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 
 export interface ApiResponse<T> {
   status: number;
@@ -42,6 +44,18 @@ export const getOptions = (): SideBarMenu[] => {
       name: 'Manage Plans',
       icon: <SpeedIcon />,
       roles: [Roles.Isp],
+    },
+    {
+      path: 'manage_requests',
+      name: 'Manage Requests',
+      icon: <RequestPageIcon />,
+      roles: [Roles.Isp],
+    },
+    {
+      path: 'my_requests',
+      name: 'My Requests',
+      icon: <ArtTrackIcon />,
+      roles: [Roles.Client],
     },
   ];
 };

@@ -1,6 +1,6 @@
 class InternetPlansController < ApplicationController
   before_action :set_internet_plan, only: %i[show update destroy]
-  before_action :check_token, except: %i[index show grouped_by_isp]
+  before_action :check_token, except: %i[index show grouped_by_isp isp_plans_offered]
 
   def index
     internet_plans = InternetPlan.all
@@ -23,6 +23,12 @@ class InternetPlansController < ApplicationController
     internet_plans = InternetPlan.where(user: @isp)
 
     render_success_response(internet_plans, 'Internet plans fetched successfully')
+  end
+
+  def isp_plans_offered
+    internet_plans = InternetPlan.joins(:user).where('user.name' => params[:isp])
+
+    render_success_response(internet_plans.map(&:json), 'Internet plans fetched successfully')
   end
 
   def create

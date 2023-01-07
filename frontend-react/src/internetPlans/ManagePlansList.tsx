@@ -4,13 +4,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
@@ -21,10 +14,9 @@ import {
   InternetPlans,
   updatePlan,
 } from './internetPlansService';
-import EditIcon from '@mui/icons-material/Edit';
 import FormTextField from '../components/TextField';
 import FormNumberField from '../components/TextField';
-import AddIcon from '@mui/icons-material/Add';
+import CommonTable from '../components/CommonTable';
 
 enum FormActions {
   Edit = 'Edit',
@@ -106,47 +98,22 @@ export default function ManagePlansList() {
   return (
     <>
       <Title text='Manage Plans' />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-          <TableHead>
-            <Button
-              variant='outlined'
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setFormAction(FormActions.New);
-                handleFormOpen({ description: '', price: 0 } as InternetPlans);
-              }}
-            >
-              Add New
-            </Button>
-            <TableRow>
-              <TableCell style={{ fontWeight: 'bold' }}>Description</TableCell>
-              <TableCell style={{ fontWeight: 'bold' }}>Price</TableCell>
-              <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {internetPlans.map((row) => (
-              <TableRow key={row.description}>
-                <TableCell>{row.description}</TableCell>
-                <TableCell>{row.price}</TableCell>
-                <TableCell>
-                  <Button
-                    variant='outlined'
-                    startIcon={<EditIcon />}
-                    onClick={() => {
-                      setFormAction(FormActions.Edit);
-                      handleFormOpen(row);
-                    }}
-                  >
-                    Edit
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+
+      <CommonTable<InternetPlans>
+        data={internetPlans}
+        columns={[
+          { key: 'description', header: 'Description' },
+          { key: 'price', header: 'Price' },
+        ]}
+        addItemAction={() => {
+          setFormAction(FormActions.New);
+          handleFormOpen({ description: '', price: 0 } as InternetPlans);
+        }}
+        editItemAction={(item: InternetPlans) => {
+          setFormAction(FormActions.Edit);
+          handleFormOpen(item);
+        }}
+      />
       <Dialog open={!!selectedPlan} onClose={handleFormClose} fullWidth>
         <DialogTitle>{formAction} Plan</DialogTitle>
         <DialogContent>
