@@ -10,13 +10,12 @@ import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import { Title } from '../components/Title';
 import {
   createPlan,
-  GetIspPlans,
+  getIspPlans,
   InternetPlans,
   updatePlan,
 } from './internetPlansService';
-import FormTextField from '../components/TextField';
-import FormNumberField from '../components/TextField';
 import CommonTable from '../components/CommonTable';
+import { FormNumberField, FormTextField } from '../components/TextField';
 
 enum FormActions {
   Edit = 'Edit',
@@ -32,7 +31,7 @@ export default function ManagePlansList() {
   const [formAction, setFormAction] = React.useState<FormActions>();
 
   useEffect(() => {
-    GetIspPlans()
+    getIspPlans()
       .then((response) => {
         setInternetPlans(response.content);
       })
@@ -128,7 +127,7 @@ export default function ManagePlansList() {
             title='Price'
             label='Price'
             name='price'
-            value={priceField.toString()}
+            value={priceField}
             setValue={setPriceField}
           />
         </DialogContent>

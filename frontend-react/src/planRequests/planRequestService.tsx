@@ -41,7 +41,7 @@ export async function getPlanRequest(
 
 export async function getPendingRequest(): Promise<ApiResponse<PlanRequest[]>> {
   const response: ApiResponse<PlanRequest[]> = (
-    await axios.get(planRequestUrl + '/pending_requests')
+    await axios.get(planRequestUrl + '/pending')
   ).data;
   return response;
 }
@@ -57,7 +57,7 @@ export async function acceptPlanRequest(
   id: number
 ): Promise<ApiResponse<PlanRequest>> {
   const response: ApiResponse<PlanRequest> = (
-    await axios.put(planRequestUrl + '/' + id + '/accept_request')
+    await axios.put(planRequestUrl + '/' + id + '/accept')
   ).data;
   return response;
 }
@@ -66,7 +66,7 @@ export async function rejectPlanRequest(
   id: number
 ): Promise<ApiResponse<PlanRequest>> {
   const response: ApiResponse<PlanRequest> = (
-    await axios.put(planRequestUrl + '/' + id + '/reject_request')
+    await axios.put(planRequestUrl + '/' + id + '/reject')
   ).data;
   return response;
 }

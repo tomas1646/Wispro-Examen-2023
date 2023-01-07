@@ -1,4 +1,10 @@
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  Grid,
+} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SubTitle, Title } from '../components/Title';
@@ -14,6 +20,8 @@ import {
 } from '../internetPlans/internetPlansService';
 import { PlanCard } from '../internetPlans/InternetPlansList';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { DefaultButton } from '../components/ButtonPanel';
 
 export default function PlanModification() {
   const params = useParams();
@@ -60,6 +68,12 @@ export default function PlanModification() {
     <>
       <Title text='Plan Modification' />
 
+      <DefaultButton
+        text='Go Back'
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+      />
+
       <SubTitle text='Plan Request History' />
 
       {planRequest &&
@@ -67,14 +81,18 @@ export default function PlanModification() {
 
       <SubTitle text='Choose New Plan from the same Isp' />
 
-      {internetPlans.map((ip) => (
-        <PlanCard
-          isClient
-          plan={ip}
-          isp={internetPlans[0].user}
-          setPlan={setSelectedPlan}
-        />
-      ))}
+      <Grid container spacing={2}>
+        {internetPlans.map((ip) => (
+          <Grid item xs={4}>
+            <PlanCard
+              isClient
+              plan={ip}
+              isp={internetPlans[0].user}
+              setPlan={setSelectedPlan}
+            />
+          </Grid>
+        ))}
+      </Grid>
 
       <Dialog open={!!selectedPlan} onClose={handleClose}>
         <DialogTitle>

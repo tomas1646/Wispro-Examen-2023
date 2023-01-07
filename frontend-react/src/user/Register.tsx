@@ -2,7 +2,7 @@ import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ButtonPanel from '../components/ButtonPanel';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
-import FormTextField from '../components/TextField';
+import { FormTextField } from '../components/TextField';
 import { Title } from '../components/Title';
 import ToggleField from '../components/ToggleField';
 import { register } from './userService';
@@ -25,7 +25,7 @@ export default function Register() {
     register(username, password, name, email, type)
       .then((response) => {
         showSuccessMessage(response.message);
-        navigate('/login');
+        navigate('/');
       })
       .catch((err) =>
         showErrorMessage(err.response.data.message || 'Unexcpected Error')
@@ -78,7 +78,6 @@ export default function Register() {
           value={type}
           setValue={setType}
         />
-
         <ButtonPanel
           button={[
             { onClick: resetFields, text: 'Clear Fields' },

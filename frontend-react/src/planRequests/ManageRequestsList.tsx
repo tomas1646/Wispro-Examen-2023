@@ -1,13 +1,9 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Grid,
   Paper,
   Table,
   TableBody,
@@ -15,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
@@ -27,7 +22,7 @@ import {
   rejectPlanRequest,
 } from './planRequestService';
 import FlakyIcon from '@mui/icons-material/Flaky';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { PlanRequestHistory } from './components';
 
 export default function ManageRequestsList() {
   const [planRequests, setPlanRequests] = React.useState<PlanRequest[]>([]);
@@ -137,42 +132,7 @@ export default function ManageRequestsList() {
         <DialogContent>
           <h4>Request History</h4>
           {selectedPlan?.request_details.map((rd) => (
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Typography>{rd.internet_plan.description}</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography sx={{ color: 'text.secondary' }}>
-                      {new Date(rd.created_at).toDateString()}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <Typography>Plan:</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>{rd.internet_plan.description}</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>Price:</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>{rd.internet_plan.price}</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>Status:</Typography>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Typography>{rd.status}</Typography>
-                  </Grid>
-                </Grid>
-              </AccordionDetails>
-            </Accordion>
+            <PlanRequestHistory {...rd} />
           ))}
         </DialogContent>
 

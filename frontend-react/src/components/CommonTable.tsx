@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Button,
   Paper,
   Table,
   TableBody,
@@ -11,6 +10,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import { DefaultButton } from './ButtonPanel';
 
 type ColumnDefinitionType<T> = {
   key: keyof T;
@@ -30,13 +30,11 @@ export default function CommonTable<T>(props: Props<T>) {
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
           {props.addItemAction && (
-            <Button
-              variant='outlined'
+            <DefaultButton
+              text='Add New'
               startIcon={<AddIcon />}
               onClick={props.addItemAction}
-            >
-              Add New
-            </Button>
+            />
           )}
           <TableRow>
             {props.columns.map((column) => (
@@ -59,15 +57,13 @@ export default function CommonTable<T>(props: Props<T>) {
 
               {props.editItemAction && (
                 <TableCell>
-                  <Button
-                    variant='outlined'
+                  <DefaultButton
+                    text='Edit'
                     startIcon={<EditIcon />}
                     onClick={() =>
                       props.editItemAction && props.editItemAction(row)
                     }
-                  >
-                    Edit
-                  </Button>
+                  />
                 </TableCell>
               )}
             </TableRow>

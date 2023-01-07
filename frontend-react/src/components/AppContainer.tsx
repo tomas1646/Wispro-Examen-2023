@@ -9,6 +9,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
   Toolbar,
   Typography,
 } from '@mui/material';
@@ -27,7 +28,7 @@ interface Props {
 }
 
 export default function AppContainer(props: Props) {
-  const drawerWidth = 180;
+  const drawerWidth = 200;
   const navigation = useNavigate();
   const user = useSessionUser();
 
@@ -42,17 +43,11 @@ export default function AppContainer(props: Props) {
             {props.title}
           </Typography>
           {user && (
-            <div
-              style={{
-                display: 'flex',
-                gap: '10px',
-                alignItems: 'center',
-              }}
-            >
+            <Stack direction='row' alignItems='center' spacing={2}>
               <AccountCircleIcon fontSize='large' />
               <SubTitle text={user.name} />
               <Chip label={user.type} color='secondary' />
-            </div>
+            </Stack>
           )}
         </Toolbar>
       </AppBar>

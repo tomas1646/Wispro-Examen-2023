@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
-  resources :users, only: %i[create show] do
+  resources :users, only: %i[create] do
     collection do
       post :login
     end
   end
 
-  resources :internet_plans, only: %i[index create update destroy show] do
+  resources :internet_plans, only: %i[create update] do
     collection do
       get :grouped_by_isp
       get :isp_plans
@@ -13,14 +13,14 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :plan_requests, only: %i[index create update destroy show] do
+  resources :plan_requests, only: %i[create show] do
     collection do
       get :my_requests
-      get :pending_requests
+      get :pending
     end
     member do
-      put :accept_request
-      put :reject_request
+      put :accept
+      put :reject
       put :modify_plan
     end
   end

@@ -13,7 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import { createPlanRequest } from '../planRequests/planRequestService';
 import { useSessionUser } from '../store/userStore';
-import { GetPlansGroupedByIsp, InternetPlans } from './internetPlansService';
+import { getPlansGroupedByIsp, InternetPlans } from './internetPlansService';
+import EastIcon from '@mui/icons-material/East';
+import { DefaultButton } from '../components/ButtonPanel';
 
 export default function InternetPlansList() {
   const user = useSessionUser();
@@ -25,7 +27,7 @@ export default function InternetPlansList() {
   const [selectedPlan, setSelectedPlan] = React.useState<InternetPlans>();
 
   useEffect(() => {
-    GetPlansGroupedByIsp()
+    getPlansGroupedByIsp()
       .then((response) => {
         const map = new Map<string, InternetPlans[]>(
           Object.entries(response.content)
@@ -116,13 +118,11 @@ export function PlanCard(props: PlanCardProps) {
       </CardContent>
       {props.isClient && (
         <CardActions>
-          <Button
-            size='small'
-            variant='outlined'
+          <DefaultButton
+            text='Request Plan'
             onClick={() => props.setPlan(props.plan)}
-          >
-            Request Plan
-          </Button>
+            endIcon={<EastIcon />}
+          />
         </CardActions>
       )}
     </Card>

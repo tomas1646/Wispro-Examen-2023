@@ -6,6 +6,8 @@ interface ButtonProps {
   submit?: boolean;
   text: string;
   style?: React.CSSProperties;
+  startIcon?: React.ReactNode;
+  endIcon?: React.ReactNode;
 }
 
 interface Props {
@@ -42,6 +44,8 @@ export function DefaultButton(props: ButtonProps) {
       variant='contained'
       onClick={props.onClick}
       style={props.style}
+      startIcon={props.startIcon}
+      endIcon={props.endIcon}
     >
       {props.text}
     </Button>

@@ -11,7 +11,7 @@ export interface InternetPlans {
   user: string;
 }
 
-export async function GetPlansGroupedByIsp(): Promise<
+export async function getPlansGroupedByIsp(): Promise<
   ApiResponse<Map<String, InternetPlans[]>>
 > {
   const response: ApiResponse<Map<String, InternetPlans[]>> = (
@@ -20,7 +20,7 @@ export async function GetPlansGroupedByIsp(): Promise<
   return response;
 }
 
-export async function GetIspPlans(): Promise<ApiResponse<InternetPlans[]>> {
+export async function getIspPlans(): Promise<ApiResponse<InternetPlans[]>> {
   const response: ApiResponse<InternetPlans[]> = (
     await axios.get(internetPlansUrl + '/isp_plans')
   ).data;

@@ -1,22 +1,11 @@
 class InternetPlansController < ApplicationController
-  before_action :set_internet_plan, only: %i[show update destroy]
-  before_action :check_token, except: %i[index show grouped_by_isp isp_plans_offered]
-
-  def index
-    internet_plans = InternetPlan.all
-
-    render_success_response(internet_plans, 'Internet plans fetched successfully')
-  end
+  before_action :set_internet_plan, only: %i[update]
+  before_action :check_token, except: %i[grouped_by_isp isp_plans_offered]
 
   def grouped_by_isp
-    ips = InternetPlan.all
-    internet_plans = ips.group_by { |ip| ip.user.name }
+    internet_plans = InternetPlan.preload(:user).all.group_by { |ip| ip.user.name }
 
     render_success_response(internet_plans, 'Internet plans fetched successfully')
-  end
-
-  def show
-    render_success_response(@internet_plan, 'Internet plan fetched successfully')
   end
 
   def isp_plans
@@ -50,15 +39,6 @@ class InternetPlansController < ApplicationController
     else
       render_error_response(@internet_plan.errors,
                             "Error updating internet plan. #{@internet_plan.errors.full_messages.join(', ')}")
-    end
-  end
-
-  def destroy
-    if @internet_plan.destroy
-      render_success_response({}, 'Internet plan deleted successfully')
-    else
-      render_error_response(@internet_plan.errors,
-                            "Error deleting internet plan. #{@internet_plan.errors.full_messages.join(', ')}")
     end
   end
 

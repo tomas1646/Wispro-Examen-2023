@@ -12,7 +12,7 @@ interface Props {
   customStyle?: CSSProperties;
 }
 
-function FormTextField(props: Props) {
+export function FormTextField(props: Props) {
   return (
     <>
       {props.title && <SubTitle text={props.title} />}
@@ -30,8 +30,6 @@ function FormTextField(props: Props) {
     </>
   );
 }
-
-export default FormTextField;
 
 interface NumberFieldProps {
   label: string;

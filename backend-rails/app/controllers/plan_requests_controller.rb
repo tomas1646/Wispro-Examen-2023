@@ -1,13 +1,7 @@
 class PlanRequestsController < ApplicationController
-  before_action :set_plan_request, only: %i[show update destroy modify_plan accept_request reject_request]
-  before_action :check_token, except: %i[index show pending_requests accept_request reject_request]
-  before_action :check_isp_token, only: %i[pending_requests accept_request reject_request]
-
-  def index
-    plan_requests = PlanRequest.all
-
-    render_success_response(plan_requests.map(&:json), 'Plan Requests fetched successfully')
-  end
+  before_action :set_plan_request, only: %i[show modify_plan accept reject]
+  before_action :check_client_token, except: %i[show pending accept reject]
+  before_action :check_isp_token, only: %i[pending accept reject]
 
   def show
     render_success_response(@plan_request.json, 'Plan Request fetched successfully')
@@ -19,7 +13,7 @@ class PlanRequestsController < ApplicationController
     render_success_response(plan_requests.map(&:json), 'Plan Requests fetched successfully')
   end
 
-  def pending_requests
+  def pending
     plan_requests = PlanRequest.joins(request_details: :internet_plan)
                                .where('internet_plan.user_id' => @isp.id)
                                .and(PlanRequest.where(status: [0, 1]))
@@ -27,13 +21,13 @@ class PlanRequestsController < ApplicationController
     render_success_response(plan_requests.map(&:json), 'Plan Requests fetched successfully')
   end
 
-  def accept_request
+  def accept
     @plan_request.accept
 
     render_success_response(@plan_request.json, 'Plan Request accepted successfully')
   end
 
-  def reject_request
+  def reject
     @plan_request.reject
 
     render_success_response(@plan_request.json, 'Plan Request rejected successfully')
@@ -77,15 +71,6 @@ class PlanRequestsController < ApplicationController
     end
   end
 
-  def destroy
-    if @plan_request.destroy
-      render_success_response({}, 'Plan Request deleted successfully')
-    else
-      render_error_response(@plan_request.errors,
-                            "Error deleting Plan Request. #{@plan_request.errors.full_messages.join(', ')}")
-    end
-  end
-
   private
 
   def internet_plan_params
@@ -100,7 +85,7 @@ class PlanRequestsController < ApplicationController
     render_error_response({}, "Plan Request doesn't exists", 404)
   end
 
-  def check_token
+  def check_client_token
     @client = Client.find_by(token: request.headers['Authorization'].split(' ').last)
 
     return if @client.present?

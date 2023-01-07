@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 import { PlanRequestDetail } from './planRequestService';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { formatDate } from '../utils/utils';
 
 export function PlanRequestHistory(props: PlanRequestDetail) {
   return (
@@ -18,7 +19,7 @@ export function PlanRequestHistory(props: PlanRequestDetail) {
           </Grid>
           <Grid item xs={6}>
             <Typography sx={{ color: 'text.secondary' }}>
-              {new Date(props.created_at).toDateString()}
+              {formatDate(props.created_at)}
             </Typography>
           </Grid>
         </Grid>
