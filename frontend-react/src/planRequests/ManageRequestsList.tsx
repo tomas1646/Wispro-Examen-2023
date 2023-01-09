@@ -4,13 +4,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
@@ -22,7 +15,8 @@ import {
   rejectPlanRequest,
 } from './planRequestService';
 import FlakyIcon from '@mui/icons-material/Flaky';
-import { PlanRequestHistory } from './components';
+import CommonTable from '../components/CommonTable';
+import { PlanRequestHistory } from '../components/PlanRequestHistory';
 
 export default function ManageRequestsList() {
   const [planRequests, setPlanRequests] = React.useState<PlanRequest[]>([]);
@@ -76,50 +70,44 @@ export default function ManageRequestsList() {
       <Title text='Manage Pending Requests' />
 
       {planRequests.length ? (
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-            <TableHead>
-              <TableRow>
-                <TableCell style={{ fontWeight: 'bold' }}>User</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }}>
-                  Description
-                </TableCell>
-                <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {planRequests.map((row) => (
-                <TableRow>
-                  <TableCell>{row.user.name}</TableCell>
-                  <TableCell>{row.status}</TableCell>
-
-                  {row.request_details.some((pr) => pr.status === 'pending') ? (
-                    <TableCell>
+        <CommonTable<PlanRequest>
+          data={planRequests}
+          columns={[
+            {
+              header: 'User',
+              content: (row) => <>{row.user.name}</>,
+            },
+            {
+              header: 'Status',
+              content: (row) => <>{row.status}</>,
+            },
+            {
+              header: 'Description',
+              content: (row) => (
+                <>
+                  {row.request_details.some(
+                    (pr) => pr.status === 'pending'
+                  ) && (
+                    <>
                       {
                         row.request_details.find(
                           (pr) => pr.status === 'pending'
                         )?.internet_plan.description
                       }
-                    </TableCell>
-                  ) : (
-                    <TableCell></TableCell>
+                    </>
                   )}
-
-                  <TableCell>
-                    <Button
-                      variant='outlined'
-                      startIcon={<FlakyIcon />}
-                      onClick={() => setSelectedPlan(row)}
-                    >
-                      Accept | Reject
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                </>
+              ),
+            },
+          ]}
+          additionalActions={[
+            {
+              text: 'Accept | Reject',
+              startIcon: <FlakyIcon />,
+              onClick: (row) => setSelectedPlan(row),
+            },
+          ]}
+        />
       ) : (
         <h3>There are no pending plan requests</h3>
       )}

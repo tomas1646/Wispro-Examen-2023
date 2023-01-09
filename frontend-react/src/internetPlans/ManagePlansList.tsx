@@ -101,8 +101,14 @@ export default function ManagePlansList() {
       <CommonTable<InternetPlans>
         data={internetPlans}
         columns={[
-          { key: 'description', header: 'Description' },
-          { key: 'price', header: 'Price' },
+          {
+            header: 'Description',
+            content: (instance) => <> {instance.description} </>,
+          },
+          {
+            header: 'Price',
+            content: (instance) => <> {instance.price} </>,
+          },
         ]}
         addItemAction={() => {
           setFormAction(FormActions.New);

@@ -5,9 +5,9 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { PlanRequestDetail } from './planRequestService';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatDate } from '../utils/utils';
+import { PlanRequestDetail } from '../planRequests/planRequestService';
 
 export function PlanRequestHistory(props: PlanRequestDetail) {
   return (

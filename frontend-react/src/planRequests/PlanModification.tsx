@@ -13,7 +13,6 @@ import {
   modifyPlanRequest,
   PlanRequest,
 } from './planRequestService';
-import { PlanRequestHistory } from './components';
 import {
   getIspPlansOffered,
   InternetPlans,
@@ -22,6 +21,7 @@ import { PlanCard } from '../internetPlans/InternetPlansList';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DefaultButton } from '../components/ButtonPanel';
+import { PlanRequestHistory } from '../components/PlanRequestHistory';
 
 export default function PlanModification() {
   const params = useParams();

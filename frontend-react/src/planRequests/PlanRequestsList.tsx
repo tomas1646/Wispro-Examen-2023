@@ -5,12 +5,6 @@ import {
   DialogContent,
   DialogTitle,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { showErrorMessage } from '../components/SnackBar';
@@ -20,9 +14,9 @@ import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import FeedIcon from '@mui/icons-material/Feed';
 import { Stack } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
-import { PlanRequestHistory } from './components';
 import { formatDate } from '../utils/utils';
-import { DefaultButton } from '../components/ButtonPanel';
+import CommonTable from '../components/CommonTable';
+import { PlanRequestHistory } from '../components/PlanRequestHistory';
 
 export default function PlanRequestsList() {
   const navigate = useNavigate();
@@ -46,63 +40,49 @@ export default function PlanRequestsList() {
   return (
     <>
       <Title text='Plan Requests List' />
+      <Paper>
+        <Title text='Filter Search' />
+        <Stack direction='row' alignItems='center'>
+          <input></input>
+        </Stack>
+      </Paper>
 
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ fontWeight: 'bold' }}>Status</TableCell>
-              <TableCell style={{ fontWeight: 'bold' }}>Description</TableCell>
-              <TableCell style={{ fontWeight: 'bold' }}>
-                Date Requested
-              </TableCell>
-              <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {planRequests.map((row) => (
-              <TableRow>
-                <TableCell>{row.status}</TableCell>
+      <CommonTable<PlanRequest>
+        data={planRequests}
+        columns={[
+          { header: 'Status', content: (row) => <>{row.status}</> },
+          {
+            header: 'Description',
+            content: (row) => (
+              <>
+                {row.request_details.some((pr) => pr.status === 'approved') &&
+                  row.request_details.find((pr) => pr.status === 'approved')
+                    ?.internet_plan.description}
+              </>
+            ),
+          },
+          {
+            header: 'Date Requested',
+            content: (row) => <>{formatDate(row.created_at)}</>,
+          },
+        ]}
+        additionalActions={[
+          {
+            text: 'History',
+            startIcon: <FeedIcon />,
+            onClick: (row) => setSelectedPlan(row),
+          },
+          {
+            text: 'Request Plan Modification',
+            startIcon: <PublishedWithChangesIcon />,
+            onClick: (row) => navigate(`/plan_modification/${row.id}`),
+            hideOnCondition: (row) =>
+              row.request_details.some((pr) => pr.status === 'approved') &&
+              !row.request_details.some((pr) => pr.status === 'pending'),
+          },
+        ]}
+      />
 
-                {row.request_details.some((pr) => pr.status === 'approved') ? (
-                  <TableCell>
-                    {
-                      row.request_details.find((pr) => pr.status === 'approved')
-                        ?.internet_plan.description
-                    }
-                  </TableCell>
-                ) : (
-                  <TableCell></TableCell>
-                )}
-                <TableCell>{formatDate(row.created_at)}</TableCell>
-                <TableCell>
-                  <Stack direction='row' spacing={2}>
-                    {row.request_details.some(
-                      (pr) => pr.status === 'approved'
-                    ) &&
-                      !row.request_details.some(
-                        (pr) => pr.status === 'pending'
-                      ) && (
-                        <DefaultButton
-                          text='Request Plan Modification'
-                          onClick={() =>
-                            navigate('/plan_modification/' + row.id)
-                          }
-                          startIcon={<PublishedWithChangesIcon />}
-                        />
-                      )}
-                    <DefaultButton
-                      text='History'
-                      onClick={() => setSelectedPlan(row)}
-                      startIcon={<FeedIcon />}
-                    />
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
       <Dialog open={!!selectedPlan} onClose={handleClose} fullWidth>
         <DialogTitle>{'Plan History'}</DialogTitle>
 

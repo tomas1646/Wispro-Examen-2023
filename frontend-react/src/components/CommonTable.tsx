@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -13,8 +14,16 @@ import AddIcon from '@mui/icons-material/Add';
 import { DefaultButton } from './ButtonPanel';
 
 type ColumnDefinitionType<T> = {
-  key: keyof T;
   header: string;
+  content: (instance: T) => JSX.Element;
+  customColor?: (instance: T) => string;
+};
+
+type ActionProps<T> = {
+  text: string;
+  startIcon?: React.ReactNode;
+  onClick: (instance: T) => void;
+  hideOnCondition?: (instance: T) => boolean;
 };
 
 type Props<T> = {
@@ -22,6 +31,7 @@ type Props<T> = {
   columns: ColumnDefinitionType<T>[];
   addItemAction?: () => void;
   editItemAction?: (item: T) => void;
+  additionalActions?: ActionProps<T>[];
 };
 
 export default function CommonTable<T>(props: Props<T>) {
@@ -42,30 +52,48 @@ export default function CommonTable<T>(props: Props<T>) {
                 {column.header}
               </TableCell>
             ))}
-            {props.editItemAction && (
+            {(props.editItemAction || props.additionalActions?.length) && (
               <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
             )}
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.data.map((row, index) => (
+          {props.data.map((row) => (
             <TableRow>
-              {props.columns.map((column, index2) => (
-                //@ts-ignore
-                <TableCell>{row[column.key]}</TableCell>
+              {props.columns.map((column) => (
+                <TableCell
+                  style={{
+                    color: column.customColor && column.customColor(row),
+                  }}
+                >
+                  {column.content(row)}
+                </TableCell>
               ))}
 
-              {props.editItemAction && (
-                <TableCell>
-                  <DefaultButton
-                    text='Edit'
-                    startIcon={<EditIcon />}
-                    onClick={() =>
-                      props.editItemAction && props.editItemAction(row)
-                    }
-                  />
-                </TableCell>
-              )}
+              <TableCell>
+                <Stack direction='row' spacing={2}>
+                  {props.editItemAction && (
+                    <DefaultButton
+                      text='Edit'
+                      startIcon={<EditIcon />}
+                      onClick={() =>
+                        props.editItemAction && props.editItemAction(row)
+                      }
+                    />
+                  )}
+                  {props.additionalActions?.map((action) => {
+                    if (action.hideOnCondition && !action.hideOnCondition(row))
+                      return null;
+                    return (
+                      <DefaultButton
+                        text={action.text}
+                        startIcon={action.startIcon}
+                        onClick={() => action.onClick(row)}
+                      />
+                    );
+                  })}
+                </Stack>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

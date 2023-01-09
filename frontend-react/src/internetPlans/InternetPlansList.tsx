@@ -116,6 +116,7 @@ export function PlanCard(props: PlanCardProps) {
           Isp: <b>{props.isp}</b>
         </p>
       </CardContent>
+
       {props.isClient && (
         <CardActions>
           <DefaultButton
