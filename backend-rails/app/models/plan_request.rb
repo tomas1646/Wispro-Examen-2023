@@ -1,6 +1,7 @@
 class PlanRequest < ApplicationRecord
   belongs_to :user
   has_many :request_details
+  has_many :internet_plans, through: :request_details
 
   enum status: { pendingApproval: 0, pendingModification: 1, approved: 2, rejected: 3, finished: 4 }
 
@@ -15,7 +16,7 @@ class PlanRequest < ApplicationRecord
   end
 
   def accept
-    raise "Plan is already #{status}" unless pendingApproval? || pendingModification?
+    raise "Plan is already #{status}" unless pending?
 
     request_details.find(&:approved?).update(status: :finished) if pendingModification?
 
@@ -25,7 +26,7 @@ class PlanRequest < ApplicationRecord
   end
 
   def reject
-    raise "Plan is already #{status}" unless pendingApproval? || pendingModification?
+    raise "Plan is already #{status}" unless pending?
 
     # Reject a new plan request
     if pendingApproval?
@@ -35,5 +36,9 @@ class PlanRequest < ApplicationRecord
 
     # Reject a plan modification
     request_details.find(&:pending?).update(status: :rejected)
+  end
+
+  def pending?
+    pendingApproval? || pendingModification?
   end
 end

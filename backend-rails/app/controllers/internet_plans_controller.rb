@@ -15,7 +15,7 @@ class InternetPlansController < ApplicationController
   end
 
   def isp_plans_offered
-    internet_plans = InternetPlan.joins(:user).where('user.name' => params[:isp])
+    internet_plans = InternetPlan.ransack(user_name_eq: params[:isp]).result.includes(:user)
 
     render_success_response(internet_plans.map(&:json), 'Internet plans fetched successfully')
   end

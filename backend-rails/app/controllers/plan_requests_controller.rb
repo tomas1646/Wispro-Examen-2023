@@ -8,17 +8,20 @@ class PlanRequestsController < ApplicationController
   end
 
   def my_requests
-    plan_requests = PlanRequest.where(user_id: @client.id)
+    plan_requests = PlanRequest.ransack(params[:q], user_id_eq: @client.id)
 
-    render_success_response(plan_requests.map(&:json), 'Plan Requests fetched successfully')
+    plan_requests.sorts = 'created_at desc'
+
+    render_success_response(plan_requests.result.map(&:json), 'Plan Requests fetched successfully')
   end
 
   def pending
-    plan_requests = PlanRequest.joins(request_details: :internet_plan)
-                               .where('internet_plan.user_id' => @isp.id)
-                               .and(PlanRequest.where(status: [0, 1]))
+    plan_requests = PlanRequest.ransack(internet_plans_user_id_eq: @isp.id,
+                                        status_in: [0, 1])
+                               .result.includes(:internet_plans)
 
-    render_success_response(plan_requests.map(&:json), 'Plan Requests fetched successfully')
+    render_success_response(plan_requests.map(&:json),
+                            'Plan Requests fetched successfully')
   end
 
   def accept
