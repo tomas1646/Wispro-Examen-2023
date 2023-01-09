@@ -3,7 +3,7 @@ class PlanRequest < ApplicationRecord
   has_many :request_details
   has_many :internet_plans, through: :request_details
 
-  enum status: { pendingApproval: 0, pendingModification: 1, approved: 2, rejected: 3, finished: 4 }
+  enum status: { pending_approval: 0, pending_modification: 1, approved: 2, rejected: 3, finished: 4 }
 
   def json
     {
@@ -18,7 +18,7 @@ class PlanRequest < ApplicationRecord
   def accept
     raise "Plan is already #{status}" unless pending?
 
-    request_details.find(&:approved?).update(status: :finished) if pendingModification?
+    request_details.find(&:approved?).update(status: :finished) if pending_modification?
 
     request_details.find(&:pending?).update(status: :approved)
 
@@ -29,7 +29,7 @@ class PlanRequest < ApplicationRecord
     raise "Plan is already #{status}" unless pending?
 
     # Reject a new plan request
-    if pendingApproval?
+    if pending_approval?
       request_details.first.update(status: :rejected)
       return rejected!
     end
@@ -38,7 +38,9 @@ class PlanRequest < ApplicationRecord
     request_details.find(&:pending?).update(status: :rejected)
   end
 
+  private
+
   def pending?
-    pendingApproval? || pendingModification?
+    pending_approval? || pending_modification?
   end
 end

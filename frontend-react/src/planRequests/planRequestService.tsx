@@ -30,9 +30,18 @@ export async function getPendingRequest(): Promise<ApiResponse<PlanRequest[]>> {
   return response;
 }
 
-export async function getMyPlanRequest(): Promise<ApiResponse<PlanRequest[]>> {
+export async function getMyPlanRequest(
+  status?: string,
+  dateFrom?: string,
+  dateTo?: string
+): Promise<ApiResponse<PlanRequest[]>> {
+  const query = new URLSearchParams();
+  if (typeof status != 'undefined') query.append('q[status_eq]', status);
+  if (dateFrom) query.append('q[created_at_gteq]', dateFrom);
+  if (dateTo) query.append('q[created_at_lteq]', dateTo);
+
   const response: ApiResponse<PlanRequest[]> = (
-    await axios.get(planRequestUrl + '/my_requests')
+    await axios.get(planRequestUrl + '/my_requests?' + query)
   ).data;
   return response;
 }

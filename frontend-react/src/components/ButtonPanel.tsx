@@ -14,7 +14,7 @@ interface Props {
   button: ButtonProps[];
 }
 
-export default function ButtonPanel(props: Props) {
+export function ButtonPanel(props: Props) {
   return (
     <div
       style={{

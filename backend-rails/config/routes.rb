@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     member do
       put :accept
       put :reject
-      put :modify_plan
+      put :modify
     end
   end
 end

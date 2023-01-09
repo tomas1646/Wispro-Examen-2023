@@ -4,11 +4,7 @@ class InternetPlan < ApplicationRecord
   belongs_to :user
 
   def json
-    {
-      id:,
-      description:,
-      price:,
-      user: user.name
-    }
+    as_json(only: %i[id description price],
+            include: { user: { only: %i[name] } })
   end
 end

@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ButtonPanel from '../components/ButtonPanel';
+import { ButtonPanel } from '../components/ButtonPanel';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import { FormTextField } from '../components/TextField';
 import { Title } from '../components/Title';

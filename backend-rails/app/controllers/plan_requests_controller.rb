@@ -1,5 +1,5 @@
 class PlanRequestsController < ApplicationController
-  before_action :set_plan_request, only: %i[show modify_plan accept reject]
+  before_action :set_plan_request, only: %i[show modify accept reject]
   before_action :check_client_token, except: %i[show pending accept reject]
   before_action :check_isp_token, only: %i[pending accept reject]
 
@@ -8,6 +8,11 @@ class PlanRequestsController < ApplicationController
   end
 
   def my_requests
+    params[:q] ||= {}
+    if params[:q][:created_at_lteq].present?
+      params[:q][:created_at_lteq] = params[:q][:created_at_lteq].to_date.end_of_day
+    end
+
     plan_requests = PlanRequest.ransack(params[:q], user_id_eq: @client.id)
 
     plan_requests.sorts = 'created_at desc'
@@ -60,11 +65,11 @@ class PlanRequestsController < ApplicationController
     end
   end
 
-  def modify_plan
+  def modify
     request_detail = RequestDetail.new(internet_plan_id: params[:internet_plan_id])
 
     @plan_request.request_details.push(request_detail)
-    @plan_request.status = :pendingModification
+    @plan_request.status = :pending_modification
 
     if @plan_request.save
       render_success_response(@plan_request.json, 'Plan Request updated successfully')

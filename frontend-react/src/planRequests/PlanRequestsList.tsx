@@ -4,11 +4,17 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
+  SelectChangeEvent,
+  TextField,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import { showErrorMessage } from '../components/SnackBar';
-import { Title } from '../components/Title';
+import { SubTitle, Title } from '../components/Title';
 import { getMyPlanRequest } from './planRequestService';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import FeedIcon from '@mui/icons-material/Feed';
@@ -22,33 +28,91 @@ import {
   PlanRequestDetailsStatusType,
   planRequestStatusDictionary,
 } from './model';
+import { DefaultButton } from '../components/ButtonPanel';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { Dayjs } from 'dayjs';
 
 export default function PlanRequestsList() {
   const navigate = useNavigate();
   const [planRequests, setPlanRequests] = React.useState<PlanRequest[]>([]);
   const [selectedPlan, setSelectedPlan] = React.useState<PlanRequest>();
+  const [searchStatus, setSearchStatus] = React.useState<string>('');
+  const [dateFrom, setDateFrom] = React.useState<Dayjs | null>(null);
+  const [dateTo, setDateTo] = React.useState<Dayjs | null>(null);
 
   useEffect(() => {
-    getMyPlanRequest()
+    console.log(searchStatus);
+    getMyPlanRequest(
+      searchStatus,
+      dateFrom?.format('YYYY-MM-DD'),
+      dateTo?.format('YYYY-MM-DD')
+    )
       .then((response) => {
         setPlanRequests(response.content);
       })
       .catch((err) => {
         showErrorMessage(err.response.data.message || 'Unexcpected Error');
       });
-  }, []);
+  }, [searchStatus, dateFrom, dateTo]);
 
   const handleClose = () => {
     setSelectedPlan(undefined);
   };
 
+  const resetFilters = () => {
+    setSearchStatus('');
+    setDateFrom(null);
+    setDateTo(null);
+  };
+
   return (
     <>
       <Title text='Plan Requests List' />
+
       <Paper>
-        <Title text='Filter Search' />
-        <Stack direction='row' alignItems='center'>
-          <input></input>
+        <SubTitle text='Filter Search' />
+        <Stack direction='row' alignItems='center' spacing={3}>
+          <FormControl fullWidth style={{ maxWidth: '200px' }}>
+            <InputLabel>Plan Request Status</InputLabel>
+            <Select
+              value={searchStatus}
+              label='Plan Request Status'
+              onChange={(e: SelectChangeEvent) =>
+                setSearchStatus(e.target.value)
+              }
+            >
+              <MenuItem value=''>
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={0}>Pending Approval</MenuItem>
+              <MenuItem value={1}>Pending Modification</MenuItem>
+              <MenuItem value={2}>Approved</MenuItem>
+              <MenuItem value={3}>Rejected</MenuItem>
+              <MenuItem value={4}>Finished</MenuItem>
+            </Select>
+          </FormControl>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DatePicker
+              label='Date From'
+              value={dateFrom}
+              onChange={(newValue) => setDateFrom(newValue)}
+              renderInput={(params) => (
+                <TextField style={{ maxWidth: '200px' }} {...params} />
+              )}
+            />
+          </LocalizationProvider>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DatePicker
+              label='Date To'
+              value={dateTo}
+              onChange={(newValue) => setDateTo(newValue)}
+              renderInput={(params) => (
+                <TextField style={{ maxWidth: '200px' }} {...params} />
+              )}
+            />
+          </LocalizationProvider>
+          <DefaultButton text='Reset' onClick={resetFilters} />
         </Stack>
       </Paper>
 
