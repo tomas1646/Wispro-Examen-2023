@@ -36,7 +36,8 @@ export async function getMyPlanRequest(
   dateTo?: string
 ): Promise<ApiResponse<PlanRequest[]>> {
   const query = new URLSearchParams();
-  if (typeof status != 'undefined') query.append('q[status_eq]', status);
+  if (typeof status != 'undefined' && status !== '')
+    query.append('q[status_eq]', status);
   if (dateFrom) query.append('q[created_at_gteq]', dateFrom);
   if (dateTo) query.append('q[created_at_lteq]', dateTo);
 

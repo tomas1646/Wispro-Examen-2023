@@ -27,6 +27,7 @@ import {
   PlanRequest,
   PlanRequestDetailsStatusType,
   planRequestStatusDictionary,
+  PlanRequestStatusType,
 } from './model';
 import { DefaultButton } from '../components/ButtonPanel';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
@@ -66,12 +67,25 @@ export default function PlanRequestsList() {
     setDateTo(null);
   };
 
+  const getStatusColor = (instance: PlanRequest) => {
+    switch (instance.status) {
+      case PlanRequestStatusType.pending_modification:
+        return 'warning';
+      case PlanRequestStatusType.pending_approval:
+        return 'warning';
+      case PlanRequestStatusType.approved:
+        return 'success';
+      case PlanRequestStatusType.rejected:
+        return 'error';
+    }
+  };
+
   return (
     <>
       <Title text='Plan Requests List' />
 
-      <Paper>
-        <SubTitle text='Filter Search' />
+      <Paper variant='outlined' style={{ padding: 10 }}>
+        <SubTitle text='Filter' />
         <Stack direction='row' alignItems='center' spacing={3}>
           <FormControl fullWidth style={{ maxWidth: '200px' }}>
             <InputLabel>Plan Request Status</InputLabel>
@@ -94,21 +108,21 @@ export default function PlanRequestsList() {
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <DatePicker
-              label='Date From'
+              label='Date Requested From'
               value={dateFrom}
               onChange={(newValue) => setDateFrom(newValue)}
               renderInput={(params) => (
-                <TextField style={{ maxWidth: '200px' }} {...params} />
+                <TextField style={{ maxWidth: '230px' }} {...params} />
               )}
             />
           </LocalizationProvider>
           <LocalizationProvider dateAdapter={AdapterMoment}>
             <DatePicker
-              label='Date To'
+              label='Date Requested To'
               value={dateTo}
               onChange={(newValue) => setDateTo(newValue)}
               renderInput={(params) => (
-                <TextField style={{ maxWidth: '200px' }} {...params} />
+                <TextField style={{ maxWidth: '230px' }} {...params} />
               )}
             />
           </LocalizationProvider>
@@ -121,17 +135,24 @@ export default function PlanRequestsList() {
         columns={[
           {
             header: 'Status',
-            content: (row) => <>{planRequestStatusDictionary[row.status]}</>,
+            content: (row) => (
+              <Button variant='contained' color={getStatusColor(row)} fullWidth>
+                {planRequestStatusDictionary[row.status]}
+              </Button>
+            ),
           },
           {
             header: 'Description',
             content: (row) => (
               <>
-                {row.request_details.some(
-                  (pr) => pr.status === PlanRequestDetailsStatusType.approved
-                ) &&
+                {row.request_details.find(
+                  (pr) => pr.status === PlanRequestDetailsStatusType.pending
+                )?.internet_plan.description ||
                   row.request_details.find(
                     (pr) => pr.status === PlanRequestDetailsStatusType.approved
+                  )?.internet_plan.description ||
+                  row.request_details.find(
+                    (pr) => pr.status === PlanRequestDetailsStatusType.rejected
                   )?.internet_plan.description}
               </>
             ),
@@ -152,12 +173,7 @@ export default function PlanRequestsList() {
             startIcon: <PublishedWithChangesIcon />,
             onClick: (row) => navigate(`/plan-modification/${row.id}`),
             hideOnCondition: (row) =>
-              row.request_details.some(
-                (pr) => pr.status === PlanRequestDetailsStatusType.approved
-              ) &&
-              !row.request_details.some(
-                (pr) => pr.status === PlanRequestDetailsStatusType.pending
-              ),
+              row.status === PlanRequestStatusType.approved,
           },
         ]}
       />
@@ -176,20 +192,13 @@ export default function PlanRequestsList() {
           <Button onClick={handleClose} color='error'>
             Close
           </Button>
-          {selectedPlan?.request_details.some(
-            (pr) => pr.status === PlanRequestDetailsStatusType.approved
-          ) &&
-            !selectedPlan.request_details.some(
-              (pr) => pr.status === PlanRequestDetailsStatusType.pending
-            ) && (
-              <Button
-                onClick={() =>
-                  navigate('/plan-modification/' + selectedPlan?.id)
-                }
-              >
-                Request Plan Modification
-              </Button>
-            )}
+          {selectedPlan?.status === PlanRequestStatusType.approved && (
+            <Button
+              onClick={() => navigate('/plan-modification/' + selectedPlan?.id)}
+            >
+              Request Plan Modification
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </>

@@ -1,6 +1,6 @@
 class PlanRequestsController < ApplicationController
   before_action :set_plan_request, only: %i[show modify accept reject]
-  before_action :check_client_token, except: %i[show pending accept reject]
+  before_action :check_client_token, only: %i[my_requests create modify]
   before_action :check_isp_token, only: %i[pending accept reject]
 
   def show
@@ -9,23 +9,26 @@ class PlanRequestsController < ApplicationController
 
   def my_requests
     params[:q] ||= {}
+
     if params[:q][:created_at_lteq].present?
       params[:q][:created_at_lteq] = params[:q][:created_at_lteq].to_date.end_of_day
     end
 
-    plan_requests = PlanRequest.ransack(params[:q], user_id_eq: @client.id)
+    params[:q][:user_id_eq] = @client.id
+
+    plan_requests = PlanRequest.ransack(params[:q])
 
     plan_requests.sorts = 'created_at desc'
 
-    render_success_response(plan_requests.result.map(&:json), 'Plan Requests fetched successfully')
+    render_success_response(plan_requests.result.preload(:user, internet_plans: :user).map(&:json),
+                            'Plan Requests fetched successfully')
   end
 
   def pending
-    plan_requests = PlanRequest.ransack(internet_plans_user_id_eq: @isp.id,
-                                        status_in: [0, 1])
-                               .result.includes(:internet_plans)
+    plan_requests = PlanRequest.ransack(internet_plans_user_id_eq: @isp.id, status_in: [0, 1])
+                               .result(distinct: true).includes(:internet_plans)
 
-    render_success_response(plan_requests.map(&:json),
+    render_success_response(plan_requests.preload(:user, internet_plans: :user).map(&:json),
                             'Plan Requests fetched successfully')
   end
 
@@ -56,15 +59,6 @@ class PlanRequestsController < ApplicationController
     end
   end
 
-  def update
-    if @plan_request.update(internet_plan_params)
-      render_success_response(@plan_request, 'Plan Request updated successfully')
-    else
-      render_error_response(@plan_request.errors,
-                            "Error updating Plan Request. #{@plan_request.errors.full_messages.join(', ')}")
-    end
-  end
-
   def modify
     request_detail = RequestDetail.new(internet_plan_id: params[:internet_plan_id])
 
@@ -80,10 +74,6 @@ class PlanRequestsController < ApplicationController
   end
 
   private
-
-  def internet_plan_params
-    params.require(:plan_request).permit(:internet_plan_id)
-  end
 
   def set_plan_request
     @plan_request = PlanRequest.find_by(id: params[:id])

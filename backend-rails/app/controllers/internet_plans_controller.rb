@@ -11,7 +11,7 @@ class InternetPlansController < ApplicationController
   def isp_plans
     internet_plans = InternetPlan.where(user: @isp)
 
-    render_success_response(internet_plans, 'Internet plans fetched successfully')
+    render_success_response(internet_plans.map(&:json), 'Internet plans fetched successfully')
   end
 
   def isp_plans_offered

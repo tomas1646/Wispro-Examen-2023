@@ -83,24 +83,21 @@ export default function ManageRequestsList() {
             },
             {
               header: 'Status',
-              content: (row) => <>{planRequestStatusDictionary[row.status]}</>,
+              content: (row) => (
+                <Button variant='contained' color='warning' fullWidth>
+                  {planRequestStatusDictionary[row.status]}
+                </Button>
+              ),
             },
             {
               header: 'Description',
               content: (row) => (
                 <>
-                  {row.request_details.some(
-                    (pr) => pr.status === PlanRequestDetailsStatusType.pending
-                  ) && (
-                    <>
-                      {
-                        row.request_details.find(
-                          (pr) =>
-                            pr.status === PlanRequestDetailsStatusType.pending
-                        )?.internet_plan.description
-                      }
-                    </>
-                  )}
+                  {
+                    row.request_details.find(
+                      (pr) => pr.status === PlanRequestDetailsStatusType.pending
+                    )?.internet_plan.description
+                  }
                 </>
               ),
             },
