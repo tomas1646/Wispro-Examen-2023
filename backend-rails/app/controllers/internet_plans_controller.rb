@@ -1,23 +1,19 @@
 class InternetPlansController < ApplicationController
   before_action :set_internet_plan, only: %i[update]
-  before_action :check_token, except: %i[grouped_by_isp isp_plans_offered]
+  before_action :check_token, except: %i[grouped search]
 
-  def grouped_by_isp
+  ## Returns all the internet plans grouped by Isp name
+  def grouped
     internet_plans = InternetPlan.preload(:user).all.group_by { |ip| ip.user.name }
 
     render_success_response(internet_plans, 'Internet plans fetched successfully')
   end
 
-  def isp_plans
-    internet_plans = InternetPlan.where(user: @isp)
+  ## Returns all the internet plans of a particular Isp
+  def search
+    internet_plans = InternetPlan.ransack(user_id_eq: params[:user_id]).result
 
-    render_success_response(internet_plans.map(&:json), 'Internet plans fetched successfully')
-  end
-
-  def isp_plans_offered
-    internet_plans = InternetPlan.ransack(user_name_eq: params[:isp]).result.includes(:user)
-
-    render_success_response(internet_plans.map(&:json), 'Internet plans fetched successfully')
+    render_success_response(internet_plans.preload(:user).map(&:json), 'Internet plans fetched successfully')
   end
 
   def create

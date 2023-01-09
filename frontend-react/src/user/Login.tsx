@@ -60,6 +60,16 @@ export default function Login() {
         />
         <input type='submit' hidden />
       </form>
+      <h4>Usuarios de Prueba</h4>
+
+      <h5>ISPs:</h5>
+
+      <li>Usuario: movistar, Password: password</li>
+      <li>Usuario: claro, Password: password</li>
+
+      <h5>Clientes:</h5>
+      <li> Usuario: tomas, Password: password</li>
+      <li> Usuario: joaquin, Password: password</li>
     </>
   );
 }

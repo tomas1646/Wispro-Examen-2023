@@ -16,23 +16,16 @@ export async function getPlansGroupedByIsp(): Promise<
   ApiResponse<Map<String, InternetPlans[]>>
 > {
   const response: ApiResponse<Map<String, InternetPlans[]>> = (
-    await axios.get(internetPlansUrl + '/grouped_by_isp')
+    await axios.get(internetPlansUrl + '/grouped')
   ).data;
   return response;
 }
 
-export async function getIspPlans(): Promise<ApiResponse<InternetPlans[]>> {
-  const response: ApiResponse<InternetPlans[]> = (
-    await axios.get(internetPlansUrl + '/isp_plans')
-  ).data;
-  return response;
-}
-
-export async function getIspPlansOffered(
-  isp: string
+export async function searchInternetPlans(
+  id: number
 ): Promise<ApiResponse<InternetPlans[]>> {
   const response: ApiResponse<InternetPlans[]> = (
-    await axios.get(internetPlansUrl + '/isp_plans_offered?isp=' + isp)
+    await axios.get(internetPlansUrl + '/search?user_id=' + id.toString())
   ).data;
   return response;
 }

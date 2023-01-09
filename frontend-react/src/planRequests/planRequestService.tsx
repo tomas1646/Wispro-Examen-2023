@@ -38,8 +38,9 @@ export async function getMyPlanRequest(
   const query = new URLSearchParams();
   if (typeof status != 'undefined' && status !== '')
     query.append('q[status_eq]', status);
+
   if (dateFrom) query.append('q[created_at_gteq]', dateFrom);
-  if (dateTo) query.append('q[created_at_lteq]', dateTo);
+  if (dateTo) query.append('q[created_at_lteq]', dateTo + ' 23:59:59');
 
   const response: ApiResponse<PlanRequest[]> = (
     await axios.get(planRequestUrl + '/my_requests?' + query)

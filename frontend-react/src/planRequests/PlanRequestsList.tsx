@@ -103,7 +103,6 @@ export default function PlanRequestsList() {
               <MenuItem value={1}>Pending Modification</MenuItem>
               <MenuItem value={2}>Approved</MenuItem>
               <MenuItem value={3}>Rejected</MenuItem>
-              <MenuItem value={4}>Finished</MenuItem>
             </Select>
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -161,6 +160,12 @@ export default function PlanRequestsList() {
             header: 'Date Requested',
             content: (row) => <>{formatDate(row.created_at)}</>,
           },
+          {
+            header: 'Isp',
+            content: (row) => (
+              <>{row.request_details[0].internet_plan.user.name}</>
+            ),
+          },
         ]}
         additionalActions={[
           {
@@ -169,7 +174,7 @@ export default function PlanRequestsList() {
             onClick: (row) => setSelectedPlan(row),
           },
           {
-            text: 'Request Plan Modification',
+            text: 'Modify Plan',
             startIcon: <PublishedWithChangesIcon />,
             onClick: (row) => navigate(`/plan-modification/${row.id}`),
             hideOnCondition: (row) =>
@@ -196,7 +201,7 @@ export default function PlanRequestsList() {
             <Button
               onClick={() => navigate('/plan-modification/' + selectedPlan?.id)}
             >
-              Request Plan Modification
+              Modify Plan
             </Button>
           )}
         </DialogActions>

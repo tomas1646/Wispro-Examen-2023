@@ -7,9 +7,8 @@ Rails.application.routes.draw do
 
   resources :internet_plans, only: %i[create update] do
     collection do
-      get :grouped_by_isp
-      get :isp_plans
-      get :isp_plans_offered
+      get :grouped
+      get :search
     end
   end
 

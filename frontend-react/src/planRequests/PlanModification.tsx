@@ -10,8 +10,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { SubTitle, Title } from '../components/Title';
 import { getPlanRequest, modifyPlanRequest } from './planRequestService';
 import {
-  getIspPlansOffered,
   InternetPlans,
+  searchInternetPlans,
 } from '../internetPlans/internetPlansService';
 import { PlanCard } from '../internetPlans/InternetPlansList';
 import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
@@ -35,8 +35,8 @@ export default function PlanModification() {
     getPlanRequest(Number(params.id)).then((response) => {
       setPlanRequest(response.content);
 
-      getIspPlansOffered(
-        response.content.request_details[0].internet_plan.user.name
+      searchInternetPlans(
+        response.content.request_details[0].internet_plan.user.id
       ).then((response) => {
         setInternetPlans(response.content);
       });
@@ -91,9 +91,9 @@ export default function PlanModification() {
         ))}
       </Grid>
 
-      <Dialog open={!!selectedPlan} onClose={handleClose}>
+      <Dialog open={!!selectedPlan} onClose={handleClose} fullWidth>
         <DialogTitle>
-          {'Confirm plan modification to ' + selectedPlan?.description + '?'}
+          {'Please confirm plan modification to ' + selectedPlan?.description}
         </DialogTitle>
 
         <DialogActions>

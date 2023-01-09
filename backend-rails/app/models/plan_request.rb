@@ -3,7 +3,7 @@ class PlanRequest < ApplicationRecord
   has_many :request_details
   has_many :internet_plans, through: :request_details
 
-  enum status: { pending_approval: 0, pending_modification: 1, approved: 2, rejected: 3, finished: 4 }
+  enum status: { pending_approval: 0, pending_modification: 1, approved: 2, rejected: 3 }
 
   def json
     {
@@ -36,6 +36,14 @@ class PlanRequest < ApplicationRecord
 
     # Reject a plan modification
     request_details.find(&:pending?).update(status: :rejected)
+    approved!
+  end
+
+  def modify_plan(internet_plan_id)
+    request_detail = RequestDetail.new(internet_plan_id:)
+
+    request_details.push(request_detail)
+    pending_modification!
   end
 
   private

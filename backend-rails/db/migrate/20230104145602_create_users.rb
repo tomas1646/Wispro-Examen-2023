@@ -8,7 +8,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :name
 
       # STI (Singel Table Inheritance)
-      t.string :type
+      t.integer :type
 
       t.timestamps
     end

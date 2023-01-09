@@ -6,6 +6,7 @@ import { ApiResponse } from '../utils/utils';
 const userUrl = backEndUrl + '/users';
 
 export interface User {
+  id: number;
   token: string;
   type: string;
   name: string;

@@ -3,7 +3,7 @@ class UsersController < ApplicationController
     user = User.new(user_params)
 
     if user.save
-      render_success_response(user.json, 'User Created')
+      render_success_response(user.json, 'User Created Successfully')
     else
       render_error_response({}, "Error creating User #{user.errors.full_messages.join(', ')}")
     end

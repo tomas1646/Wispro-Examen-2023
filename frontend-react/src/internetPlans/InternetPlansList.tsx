@@ -77,11 +77,9 @@ export default function InternetPlansList() {
             </Grid>
           </>
         ))}
-      <Dialog open={!!selectedPlan} onClose={handleClose}>
+      <Dialog open={!!selectedPlan} onClose={handleClose} fullWidth>
         <DialogTitle>
-          {'Confirm request to subscribe to plan ' +
-            selectedPlan?.description +
-            ':'}
+          {'Confirm subscription to ' + selectedPlan?.description}
         </DialogTitle>
 
         <DialogActions>

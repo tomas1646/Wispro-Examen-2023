@@ -22,7 +22,6 @@ export enum PlanRequestStatusType {
   pending_modification = 'pending_modification',
   approved = 'approved',
   rejected = 'rejected',
-  finished = 'finshed',
 }
 export enum PlanRequestDetailsStatusType {
   pending = 'pending',
@@ -39,7 +38,6 @@ export const planRequestStatusDictionary: EnumDictionary<
   [PlanRequestStatusType.pending_modification]: 'Pending Modification',
   [PlanRequestStatusType.approved]: 'Approved',
   [PlanRequestStatusType.rejected]: 'Rejected',
-  [PlanRequestStatusType.finished]: 'Finished',
 };
 
 export const planRequestDetailsStatusDictionary: EnumDictionary<

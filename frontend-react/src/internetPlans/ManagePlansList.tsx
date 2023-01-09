@@ -10,12 +10,13 @@ import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import { Title } from '../components/Title';
 import {
   createPlan,
-  getIspPlans,
   InternetPlans,
+  searchInternetPlans,
   updatePlan,
 } from './internetPlansService';
 import CommonTable from '../components/CommonTable';
 import { FormNumberField, FormTextField } from '../components/TextField';
+import { useSessionUser } from '../store/userStore';
 
 enum FormActions {
   Edit = 'Edit',
@@ -23,6 +24,7 @@ enum FormActions {
 }
 
 export default function ManagePlansList() {
+  const user = useSessionUser();
   const [selectedPlan, setSelectedPlan] = React.useState<InternetPlans>();
   const [descriptionField, setDescriptionField] = React.useState<string>('');
   const [priceField, setPriceField] = React.useState<number>(0);
@@ -31,13 +33,16 @@ export default function ManagePlansList() {
   const [formAction, setFormAction] = React.useState<FormActions>();
 
   useEffect(() => {
-    getIspPlans()
+    if (!user) return;
+
+    searchInternetPlans(user.id)
       .then((response) => {
         setInternetPlans(response.content);
       })
       .catch((err) => {
         showErrorMessage(err.response.data.message || 'Unexcpected Error');
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateData]);
 
   const handleFormOpen = (ip: InternetPlans) => {
@@ -96,7 +101,7 @@ export default function ManagePlansList() {
 
   return (
     <>
-      <Title text='Manage Plans' />
+      <Title text='Manage Internet Plans' />
 
       <CommonTable<InternetPlans>
         data={internetPlans}
