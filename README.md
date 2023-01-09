@@ -2,6 +2,7 @@
 
 - [Tecnologías Utilizadas](#tecnologías)
 - [Cómo ejecutar el programa](#cómo-ejecutar-el-programa)
+  - [Clonar el repositorio](#clonar-el-repositorio)
   - [Base de datos (Postgres - Docker)](#base-de-datos-postgres---docker)
   - [Back-End](#back-end-ruby-on-rails)
   - [Front-End](#front-end-react)
@@ -25,6 +26,14 @@
 - Contraseña: root
 
 ## Cómo ejecutar el programa
+
+### Clonar el repositorio
+
+```bash
+git clone https://github.com/tomas1646/Wispro-Examen-2023.git
+
+cd Wispro-Examen-2023
+```
 
 ### Base de datos (Postgres - Docker)
 
