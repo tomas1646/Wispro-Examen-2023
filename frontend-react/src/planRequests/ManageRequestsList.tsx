@@ -11,12 +11,16 @@ import { Title } from '../components/Title';
 import {
   acceptPlanRequest,
   getPendingRequest,
-  PlanRequest,
   rejectPlanRequest,
 } from './planRequestService';
 import FlakyIcon from '@mui/icons-material/Flaky';
 import CommonTable from '../components/CommonTable';
 import { PlanRequestHistory } from '../components/PlanRequestHistory';
+import {
+  PlanRequest,
+  PlanRequestDetailsStatusType,
+  planRequestStatusDictionary,
+} from './model';
 
 export default function ManageRequestsList() {
   const [planRequests, setPlanRequests] = React.useState<PlanRequest[]>([]);
@@ -79,19 +83,20 @@ export default function ManageRequestsList() {
             },
             {
               header: 'Status',
-              content: (row) => <>{row.status}</>,
+              content: (row) => <>{planRequestStatusDictionary[row.status]}</>,
             },
             {
               header: 'Description',
               content: (row) => (
                 <>
                   {row.request_details.some(
-                    (pr) => pr.status === 'pending'
+                    (pr) => pr.status === PlanRequestDetailsStatusType.pending
                   ) && (
                     <>
                       {
                         row.request_details.find(
-                          (pr) => pr.status === 'pending'
+                          (pr) =>
+                            pr.status === PlanRequestDetailsStatusType.pending
                         )?.internet_plan.description
                       }
                     </>

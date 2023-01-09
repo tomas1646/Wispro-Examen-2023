@@ -1,25 +1,9 @@
 import axios from 'axios';
 import backEndUrl from '../environment';
-import { InternetPlans } from '../internetPlans/internetPlansService';
-import { User } from '../user/userService';
 import { ApiResponse } from '../utils/utils';
+import { PlanRequest } from './model';
 
 const planRequestUrl = backEndUrl + '/plan_requests';
-
-export interface PlanRequest {
-  id: number;
-  status: string;
-  user: User;
-  request_details: PlanRequestDetail[];
-  created_at: string;
-}
-
-export interface PlanRequestDetail {
-  id: number;
-  status: string;
-  internet_plan: InternetPlans;
-  created_at: string;
-}
 
 export async function createPlanRequest(
   internet_plan_id: number
@@ -76,7 +60,7 @@ export async function modifyPlanRequest(
   internet_plan_id: number
 ): Promise<ApiResponse<PlanRequest>> {
   const response: ApiResponse<PlanRequest> = (
-    await axios.put(planRequestUrl + '/' + id + '/modify_plan', {
+    await axios.put(planRequestUrl + '/' + id + '/modify', {
       internet_plan_id,
     })
   ).data;

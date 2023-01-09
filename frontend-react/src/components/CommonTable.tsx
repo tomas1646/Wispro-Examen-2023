@@ -16,7 +16,6 @@ import { DefaultButton } from './ButtonPanel';
 type ColumnDefinitionType<T> = {
   header: string;
   content: (instance: T) => JSX.Element;
-  customColor?: (instance: T) => string;
 };
 
 type ActionProps<T> = {
@@ -61,13 +60,7 @@ export default function CommonTable<T>(props: Props<T>) {
           {props.data.map((row) => (
             <TableRow>
               {props.columns.map((column) => (
-                <TableCell
-                  style={{
-                    color: column.customColor && column.customColor(row),
-                  }}
-                >
-                  {column.content(row)}
-                </TableCell>
+                <TableCell>{column.content(row)}</TableCell>
               ))}
 
               <TableCell>

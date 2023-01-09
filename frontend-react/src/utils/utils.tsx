@@ -5,6 +5,10 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import ArtTrackIcon from '@mui/icons-material/ArtTrack';
 
+export type EnumDictionary<T extends string | symbol | number, U> = {
+  [K in T]: U;
+};
+
 export interface ApiResponse<T> {
   status: number;
   success: boolean;
@@ -34,25 +38,25 @@ export const getOptions = (): SideBarMenu[] => {
       name: 'Register',
     },
     {
-      path: 'internet_plans',
+      path: 'internet-plans',
       name: 'Internet Plans',
       icon: <NetworkCheckIcon />,
       roles: [Roles.Client, Roles.Isp],
     },
     {
-      path: 'manage_plans',
+      path: 'manage-plans',
       name: 'Manage Plans',
       icon: <SpeedIcon />,
       roles: [Roles.Isp],
     },
     {
-      path: 'manage_requests',
+      path: 'manage-requests',
       name: 'Manage Requests',
       icon: <RequestPageIcon />,
       roles: [Roles.Isp],
     },
     {
-      path: 'my_requests',
+      path: 'my-requests',
       name: 'My Requests',
       icon: <ArtTrackIcon />,
       roles: [Roles.Client],

@@ -49,7 +49,7 @@ export default function InternetPlansList() {
     createPlanRequest(selectedPlan.id)
       .then((response) => {
         showSuccessMessage(response.message);
-        navigate('/my_requests');
+        navigate('/my-requests');
       })
       .catch((err) => {
         showErrorMessage(err.response.data.message || 'Unexcpected Error');

@@ -8,11 +8,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SubTitle, Title } from '../components/Title';
-import {
-  getPlanRequest,
-  modifyPlanRequest,
-  PlanRequest,
-} from './planRequestService';
+import { getPlanRequest, modifyPlanRequest } from './planRequestService';
 import {
   getIspPlansOffered,
   InternetPlans,
@@ -22,6 +18,7 @@ import { showErrorMessage, showSuccessMessage } from '../components/SnackBar';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { DefaultButton } from '../components/ButtonPanel';
 import { PlanRequestHistory } from '../components/PlanRequestHistory';
+import { PlanRequest } from './model';
 
 export default function PlanModification() {
   const params = useParams();
@@ -39,7 +36,7 @@ export default function PlanModification() {
       setPlanRequest(response.content);
 
       getIspPlansOffered(
-        response.content.request_details[0].internet_plan.user
+        response.content.request_details[0].internet_plan.user.name
       ).then((response) => {
         setInternetPlans(response.content);
       });
@@ -57,7 +54,7 @@ export default function PlanModification() {
     modifyPlanRequest(Number(params.id), selectedPlan.id)
       .then((response) => {
         showSuccessMessage(response.message);
-        navigate('/my_requests');
+        navigate('/my-requests');
       })
       .catch((err) => {
         showErrorMessage(err.response.data.message || 'Unexcpected Error');
@@ -87,7 +84,7 @@ export default function PlanModification() {
             <PlanCard
               isClient
               plan={ip}
-              isp={internetPlans[0].user}
+              isp={internetPlans[0].user.name}
               setPlan={setSelectedPlan}
             />
           </Grid>

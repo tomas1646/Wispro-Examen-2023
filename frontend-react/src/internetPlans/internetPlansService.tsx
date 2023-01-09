@@ -1,5 +1,6 @@
 import axios from 'axios';
 import backEndUrl from '../environment';
+import { User } from '../user/userService';
 import { ApiResponse } from '../utils/utils';
 
 const internetPlansUrl = backEndUrl + '/internet_plans';
@@ -8,7 +9,7 @@ export interface InternetPlans {
   id: number;
   description: string;
   price: number;
-  user: string;
+  user: User;
 }
 
 export async function getPlansGroupedByIsp(): Promise<

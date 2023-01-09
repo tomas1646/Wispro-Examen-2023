@@ -20,23 +20,23 @@ function App() {
       <AppContainer title='Wispro - Examen' navigation={getOptions()}>
         <Routes>
           <Route
-            path='/plan_modification/:id'
+            path='/plan-modification/:id'
             element={user ? <PlanModification /> : <Navigate to={'/'} />}
           />
           <Route
-            path='/manage_requests'
+            path='/manage-requests'
             element={user ? <ManageRequestsList /> : <Navigate to={'/'} />}
           />
           <Route
-            path='/my_requests'
+            path='/my-requests'
             element={user ? <PlanRequestsList /> : <Navigate to={'/'} />}
           />
           <Route
-            path='/internet_plans'
+            path='/internet-plans'
             element={user ? <InternetPlansList /> : <Navigate to={'/'} />}
           />
           <Route
-            path='/manage_plans'
+            path='/manage-plans'
             element={user ? <ManagePlansList /> : <Navigate to={'/'} />}
           />
 

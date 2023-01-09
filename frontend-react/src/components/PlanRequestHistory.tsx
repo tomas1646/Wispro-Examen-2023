@@ -7,7 +7,10 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { formatDate } from '../utils/utils';
-import { PlanRequestDetail } from '../planRequests/planRequestService';
+import {
+  PlanRequestDetail,
+  planRequestDetailsStatusDictionary,
+} from '../planRequests/model';
 
 export function PlanRequestHistory(props: PlanRequestDetail) {
   return (
@@ -42,7 +45,9 @@ export function PlanRequestHistory(props: PlanRequestDetail) {
             <Typography>Status:</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography>{props.status}</Typography>
+            <Typography>
+              {planRequestDetailsStatusDictionary[props.status]}
+            </Typography>
           </Grid>
         </Grid>
       </AccordionDetails>

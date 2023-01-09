@@ -9,7 +9,7 @@ import {
 import React, { useEffect } from 'react';
 import { showErrorMessage } from '../components/SnackBar';
 import { Title } from '../components/Title';
-import { getMyPlanRequest, PlanRequest } from './planRequestService';
+import { getMyPlanRequest } from './planRequestService';
 import PublishedWithChangesIcon from '@mui/icons-material/PublishedWithChanges';
 import FeedIcon from '@mui/icons-material/Feed';
 import { Stack } from '@mui/system';
@@ -17,6 +17,11 @@ import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../utils/utils';
 import CommonTable from '../components/CommonTable';
 import { PlanRequestHistory } from '../components/PlanRequestHistory';
+import {
+  PlanRequest,
+  PlanRequestDetailsStatusType,
+  planRequestStatusDictionary,
+} from './model';
 
 export default function PlanRequestsList() {
   const navigate = useNavigate();
@@ -50,14 +55,20 @@ export default function PlanRequestsList() {
       <CommonTable<PlanRequest>
         data={planRequests}
         columns={[
-          { header: 'Status', content: (row) => <>{row.status}</> },
+          {
+            header: 'Status',
+            content: (row) => <>{planRequestStatusDictionary[row.status]}</>,
+          },
           {
             header: 'Description',
             content: (row) => (
               <>
-                {row.request_details.some((pr) => pr.status === 'approved') &&
-                  row.request_details.find((pr) => pr.status === 'approved')
-                    ?.internet_plan.description}
+                {row.request_details.some(
+                  (pr) => pr.status === PlanRequestDetailsStatusType.approved
+                ) &&
+                  row.request_details.find(
+                    (pr) => pr.status === PlanRequestDetailsStatusType.approved
+                  )?.internet_plan.description}
               </>
             ),
           },
@@ -75,10 +86,14 @@ export default function PlanRequestsList() {
           {
             text: 'Request Plan Modification',
             startIcon: <PublishedWithChangesIcon />,
-            onClick: (row) => navigate(`/plan_modification/${row.id}`),
+            onClick: (row) => navigate(`/plan-modification/${row.id}`),
             hideOnCondition: (row) =>
-              row.request_details.some((pr) => pr.status === 'approved') &&
-              !row.request_details.some((pr) => pr.status === 'pending'),
+              row.request_details.some(
+                (pr) => pr.status === PlanRequestDetailsStatusType.approved
+              ) &&
+              !row.request_details.some(
+                (pr) => pr.status === PlanRequestDetailsStatusType.pending
+              ),
           },
         ]}
       />
@@ -98,14 +113,14 @@ export default function PlanRequestsList() {
             Close
           </Button>
           {selectedPlan?.request_details.some(
-            (pr) => pr.status === 'approved'
+            (pr) => pr.status === PlanRequestDetailsStatusType.approved
           ) &&
             !selectedPlan.request_details.some(
-              (pr) => pr.status === 'pending'
+              (pr) => pr.status === PlanRequestDetailsStatusType.pending
             ) && (
               <Button
                 onClick={() =>
-                  navigate('/plan_modification/' + selectedPlan?.id)
+                  navigate('/plan-modification/' + selectedPlan?.id)
                 }
               >
                 Request Plan Modification
