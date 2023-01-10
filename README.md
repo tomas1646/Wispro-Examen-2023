@@ -1,6 +1,7 @@
 # Índice
 
 - [Tecnologías Utilizadas](#tecnologías)
+- [Diagrama de Clases](#diagrama-de-clases)
 - [Cómo ejecutar el programa](#cómo-ejecutar-el-programa)
   - [Clonar el repositorio](#clonar-el-repositorio)
   - [Base de datos (Postgres - Docker)](#base-de-datos-postgres---docker)
@@ -24,6 +25,10 @@
 - Postgres v15.1
 - Usuario: root
 - Contraseña: root
+
+## Diagrama de Clases
+
+![Diagrama Clases](https://github.com/tomas1646/Juego-de-Cartas-Rails-Backend/blob/master/Diagrama%20Clases.png?raw=true)
 
 ## Cómo ejecutar el programa
 
