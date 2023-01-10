@@ -28,7 +28,7 @@
 
 ## Diagrama de Clases
 
-![Diagrama Clases](https://github.com/tomas1646/Juego-de-Cartas-Rails-Backend/blob/master/Diagrama%20Clases.png?raw=true)
+![Diagrama Clases](https://github.com/tomas1646/Wispro-Examen-2023/blob/master/Diagrama%20Clases.png?raw=true)
 
 ## Cómo ejecutar el programa
 
