@@ -35,7 +35,7 @@ export default function ManagePlansList() {
   useEffect(() => {
     if (!user) return;
 
-    searchInternetPlans(user.id)
+    searchInternetPlans(user.name)
       .then((response) => {
         setInternetPlans(response.content);
       })

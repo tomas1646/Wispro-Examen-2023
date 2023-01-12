@@ -22,10 +22,10 @@ export async function getPlansGroupedByIsp(): Promise<
 }
 
 export async function searchInternetPlans(
-  id: number
+  isp: string
 ): Promise<ApiResponse<InternetPlans[]>> {
   const response: ApiResponse<InternetPlans[]> = (
-    await axios.get(internetPlansUrl + '/search?user_id=' + id.toString())
+    await axios.get(internetPlansUrl + '/search?isp=' + isp)
   ).data;
   return response;
 }

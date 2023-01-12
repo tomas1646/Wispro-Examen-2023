@@ -6,13 +6,11 @@ class PlanRequest < ApplicationRecord
   enum status: { pending_approval: 0, pending_modification: 1, approved: 2, rejected: 3 }
 
   def json
-    {
-      id:,
-      status:,
-      user: user.json,
-      request_details: request_details.map(&:json),
-      created_at:
-    }
+    as_json(only: %i[id status created_at],
+            include: { user: { only: %i[name] },
+                       request_details: { only: %i[status created_at],
+                                          include: { internet_plan: { only: %i[id description price],
+                                                                      include: { user: { only: %i[name] } } } } } })
   end
 
   def accept

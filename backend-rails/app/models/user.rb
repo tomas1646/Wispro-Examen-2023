@@ -8,7 +8,7 @@ class User < ApplicationRecord
   before_create :set_token
 
   def json
-    as_json(only: %i[id name username email type token])
+    as_json(only: %i[name username type token])
   end
 
   private

@@ -60,12 +60,12 @@ export default function InternetPlansList() {
     <div>
       {internetPlans &&
         Array.from(internetPlans.keys()).map((key) => (
-          <>
+          <div key={'isp-' + key}>
             <h2>{key} internet plans:</h2>
 
             <Grid container spacing={2}>
               {internetPlans.get(key)?.map((plan) => (
-                <Grid item xs={4}>
+                <Grid key={key + '-' + plan.description} item xs={4}>
                   <PlanCard
                     plan={plan}
                     isp={key}
@@ -75,7 +75,7 @@ export default function InternetPlansList() {
                 </Grid>
               ))}
             </Grid>
-          </>
+          </div>
         ))}
       <Dialog open={!!selectedPlan} onClose={handleClose} fullWidth>
         <DialogTitle>

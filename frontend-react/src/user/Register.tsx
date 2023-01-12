@@ -12,11 +12,16 @@ export default function Register() {
   const [name, setName] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [type, setType] = useState<string>('');
 
   const handleRegister = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (password !== confirmPassword) {
+      return showErrorMessage('Passwords do not match');
+    }
 
     if (!username || !password || !name || !email || !type) {
       return showErrorMessage('Inputs cant be empty');
@@ -38,6 +43,7 @@ export default function Register() {
     setUsername('');
     setEmail('');
     setType('');
+    setConfirmPassword('');
   };
 
   return (
@@ -71,6 +77,14 @@ export default function Register() {
           title='Enter Password'
           value={password}
           setValue={setPassword}
+          password
+        />
+        <FormTextField
+          label='Confirm Password'
+          name='password'
+          title='Confirm Password'
+          value={confirmPassword}
+          setValue={setConfirmPassword}
           password
         />
         <ToggleField

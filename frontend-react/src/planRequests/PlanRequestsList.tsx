@@ -43,7 +43,6 @@ export default function PlanRequestsList() {
   const [dateTo, setDateTo] = React.useState<Dayjs | null>(null);
 
   useEffect(() => {
-    console.log(searchStatus);
     getMyPlanRequest(
       searchStatus,
       dateFrom?.format('YYYY-MM-DD'),
@@ -188,8 +187,8 @@ export default function PlanRequestsList() {
 
         <DialogContent>
           <h4>Request History</h4>
-          {selectedPlan?.request_details.map((rd) => (
-            <PlanRequestHistory {...rd} />
+          {selectedPlan?.request_details.map((rd, index) => (
+            <PlanRequestHistory key={'RequestHistory-' + index} {...rd} />
           ))}
         </DialogContent>
 

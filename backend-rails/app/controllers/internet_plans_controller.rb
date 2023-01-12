@@ -11,7 +11,7 @@ class InternetPlansController < ApplicationController
 
   ## Returns all the internet plans of a particular Isp
   def search
-    internet_plans = InternetPlan.ransack(user_id_eq: params[:user_id]).result
+    internet_plans = InternetPlan.ransack(user_name_eq: params[:isp]).result.includes(:user)
 
     render_success_response(internet_plans.preload(:user).map(&:json), 'Internet plans fetched successfully')
   end
@@ -57,6 +57,6 @@ class InternetPlansController < ApplicationController
 
     return if @isp.present?
 
-    render_error_response({}, "Isp with token #{request.headers['Authorization']} doesn't exists", 404)
+    render_error_response({}, "Isp with token #{request.headers['Authorization']} doesn't exists", 401)
   end
 end

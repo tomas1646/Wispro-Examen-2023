@@ -121,8 +121,8 @@ export default function ManageRequestsList() {
 
         <DialogContent>
           <h4>Request History</h4>
-          {selectedPlan?.request_details.map((rd) => (
-            <PlanRequestHistory {...rd} />
+          {selectedPlan?.request_details.map((rd, index) => (
+            <PlanRequestHistory key={'RequestHistory-' + index} {...rd} />
           ))}
         </DialogContent>
 

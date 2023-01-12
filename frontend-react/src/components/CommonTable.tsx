@@ -35,62 +35,75 @@ type Props<T> = {
 
 export default function CommonTable<T>(props: Props<T>) {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-        <TableHead>
-          {props.addItemAction && (
-            <DefaultButton
-              text='Add New'
-              startIcon={<AddIcon />}
-              onClick={props.addItemAction}
-            />
-          )}
-          <TableRow>
-            {props.columns.map((column) => (
-              <TableCell style={{ fontWeight: 'bold' }}>
-                {column.header}
-              </TableCell>
-            ))}
-            {(props.editItemAction || props.additionalActions?.length) && (
-              <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {props.data.map((row) => (
+    <>
+      {props.addItemAction && (
+        <div style={{ marginBottom: 15 }}>
+          <DefaultButton
+            text='Add New'
+            startIcon={<AddIcon />}
+            onClick={props.addItemAction}
+          />
+        </div>
+      )}
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label='simple table'>
+          <TableHead>
             <TableRow>
               {props.columns.map((column) => (
-                <TableCell>{column.content(row)}</TableCell>
+                <TableCell
+                  key={'Header-' + column.header}
+                  style={{ fontWeight: 'bold' }}
+                >
+                  {column.header}
+                </TableCell>
               ))}
-
-              <TableCell>
-                <Stack direction='row' spacing={2}>
-                  {props.editItemAction && (
-                    <DefaultButton
-                      text='Edit'
-                      startIcon={<EditIcon />}
-                      onClick={() =>
-                        props.editItemAction && props.editItemAction(row)
-                      }
-                    />
-                  )}
-                  {props.additionalActions?.map((action) => {
-                    if (action.hideOnCondition && !action.hideOnCondition(row))
-                      return null;
-                    return (
-                      <DefaultButton
-                        text={action.text}
-                        startIcon={action.startIcon}
-                        onClick={() => action.onClick(row)}
-                      />
-                    );
-                  })}
-                </Stack>
-              </TableCell>
+              {(props.editItemAction || props.additionalActions?.length) && (
+                <TableCell style={{ fontWeight: 'bold' }}>Actions</TableCell>
+              )}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {props.data.map((row, index1) => (
+              <TableRow key={'Row-' + index1}>
+                {props.columns.map((column, index2) => (
+                  <TableCell key={'Cell-' + index1 + '-' + index2}>
+                    {column.content(row)}
+                  </TableCell>
+                ))}
+
+                <TableCell>
+                  <Stack direction='row' spacing={2}>
+                    {props.editItemAction && (
+                      <DefaultButton
+                        text='Edit'
+                        startIcon={<EditIcon />}
+                        onClick={() =>
+                          props.editItemAction && props.editItemAction(row)
+                        }
+                      />
+                    )}
+                    {props.additionalActions?.map((action) => {
+                      if (
+                        action.hideOnCondition &&
+                        !action.hideOnCondition(row)
+                      )
+                        return null;
+                      return (
+                        <DefaultButton
+                          key={'Action-' + action.text}
+                          text={action.text}
+                          startIcon={action.startIcon}
+                          onClick={() => action.onClick(row)}
+                        />
+                      );
+                    })}
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }

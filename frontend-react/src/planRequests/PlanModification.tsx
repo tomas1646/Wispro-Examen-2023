@@ -36,7 +36,7 @@ export default function PlanModification() {
       setPlanRequest(response.content);
 
       searchInternetPlans(
-        response.content.request_details[0].internet_plan.user.id
+        response.content.request_details[0].internet_plan.user.name
       ).then((response) => {
         setInternetPlans(response.content);
       });
@@ -74,13 +74,15 @@ export default function PlanModification() {
       <SubTitle text='Plan Request History' />
 
       {planRequest &&
-        planRequest.request_details.map((rd) => <PlanRequestHistory {...rd} />)}
+        planRequest.request_details.map((rd, index) => (
+          <PlanRequestHistory key={'RequestHistory-' + index} {...rd} />
+        ))}
 
       <SubTitle text='Choose New Plan from the same Isp' />
 
       <Grid container spacing={2}>
         {internetPlans.map((ip) => (
-          <Grid item xs={4}>
+          <Grid key={'plan' + ip.id} item xs={4}>
             <PlanCard
               isClient
               plan={ip}

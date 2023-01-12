@@ -1,7 +1,7 @@
 class PlanRequestsController < ApplicationController
   before_action :set_plan_request, only: %i[show modify accept reject]
   before_action :set_internet_plan, only: %i[modify]
-  before_action :check_client_token, only: %i[my_requests create modify]
+  before_action :check_client_token, only: %i[show my_requests create modify]
   before_action :check_isp_token, only: %i[pending accept reject]
 
   def show
@@ -10,11 +10,7 @@ class PlanRequestsController < ApplicationController
 
   ## Returns all the plan requests of the logged-in client
   def my_requests
-    params[:q] ||= {}
-
-    params[:q][:user_id_eq] = @client.id
-
-    plan_requests = PlanRequest.ransack(params[:q])
+    plan_requests = @client.plan_requests.ransack(params[:q])
 
     plan_requests.sorts = 'created_at desc'
 
@@ -96,7 +92,7 @@ class PlanRequestsController < ApplicationController
 
     return if @client.present?
 
-    render_error_response({}, "Client with token #{request.headers['Authorization']} doesn't exists", 404)
+    render_error_response({}, "Client with token #{request.headers['Authorization']} doesn't exists", 401)
   end
 
   def check_isp_token
@@ -104,6 +100,6 @@ class PlanRequestsController < ApplicationController
 
     return if @isp.present?
 
-    render_error_response({}, "Isp with token #{request.headers['Authorization']} doesn't exists", 404)
+    render_error_response({}, "Isp with token #{request.headers['Authorization']} doesn't exists", 401)
   end
 end

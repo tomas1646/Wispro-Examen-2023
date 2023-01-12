@@ -6,6 +6,6 @@ class InternetPlan < ApplicationRecord
 
   def json
     as_json(only: %i[id description price],
-            include: { user: { only: %i[id name] } })
+            include: { user: { only: %i[name] } })
   end
 end
