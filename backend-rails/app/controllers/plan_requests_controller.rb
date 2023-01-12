@@ -44,6 +44,8 @@ class PlanRequestsController < ApplicationController
 
   ## Accept a Plan Request
   def accept
+    return render_error_response({}, 'You are not the ISP of the plan', 401) unless plan_belongs_to_isp?
+
     @plan_request.accept
 
     render_success_response(@plan_request.json, 'Plan Request accepted successfully')
@@ -51,6 +53,8 @@ class PlanRequestsController < ApplicationController
 
   ## Reject a Plan Request
   def reject
+    return render_error_response({}, 'You are not the ISP of the plan', 401) unless plan_belongs_to_isp?
+
     @plan_request.reject
 
     render_success_response(@plan_request.json, 'Plan Request rejected successfully')
@@ -101,5 +105,9 @@ class PlanRequestsController < ApplicationController
     return if @isp.present?
 
     render_error_response({}, "Isp with token #{request.headers['Authorization']} doesn't exists", 401)
+  end
+
+  def plan_belongs_to_isp?
+    @plan_request.internet_plans.first.user_id == @isp.id
   end
 end

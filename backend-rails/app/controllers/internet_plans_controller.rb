@@ -22,7 +22,7 @@ class InternetPlansController < ApplicationController
     internet_plan.user = @isp
 
     if internet_plan.save
-      render_success_response(internet_plan, 'Internet plan created successfully')
+      render_success_response(internet_plan.json, 'Internet plan created successfully')
     else
       render_error_response(internet_plan.errors,
                             "Error creating internet plan. #{internet_plan.errors.full_messages.join(', ')}")
@@ -31,7 +31,7 @@ class InternetPlansController < ApplicationController
 
   def update
     if @internet_plan.update(internet_plan_params)
-      render_success_response(@internet_plan, 'Internet plan updated successfully')
+      render_success_response(@internet_plan.json, 'Internet plan updated successfully')
     else
       render_error_response(@internet_plan.errors,
                             "Error updating internet plan. #{@internet_plan.errors.full_messages.join(', ')}")

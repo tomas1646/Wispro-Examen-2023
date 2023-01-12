@@ -38,6 +38,8 @@ class PlanRequest < ApplicationRecord
   end
 
   def modify_plan(internet_plan_id)
+    raise "Plan is already #{status}. Cant request modification." unless approved?
+
     request_detail = RequestDetail.new(internet_plan_id:)
 
     request_details.push(request_detail)
